@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>{% block title%} {%endblock%}</title>
+    {% include 'parciais/_head.html' %}
+  </head>
+  <body>
+  
+    {% if not hide_navbar %}
+      <nav class="navbar navbar-expand-lg navbar-light" style="background-color:#ededed;">
+        <h3 class="navbar-brand sizeheader">{% block bar_title %} {% endblock %}</h3>
+        <button class="navbar-toggler sizeheader" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto" style="gap: 5px;">
+            <li class="nav-item active">
+              <a class="nav-link" href="{% url 'index' %}">Inicio <span class="sr-only">(current)</span></a>
+            </li>
+      
+            {% block header%} {% endblock %}
+          </ul>
+        </div>
+        <button type="button" class="btn btn-info">
+          Notificações <span class="badge bg-secondary">{{ notifications|length }}</span>
+        </button>
+      </nav>
+      <br>
+    {% endif %}
+    
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert {{message.tags}}" role="alert">
+            {{message}} 
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    {% block body %} {% endblock %}
+  </body>
+</html>

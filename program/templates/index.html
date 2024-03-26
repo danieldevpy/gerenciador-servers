@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block title %}Gerenciador de Servidores 0.3 {%endblock%}
+{% block bar_title %}Gerenciador de Servidores{% endblock %}
+
+{% block header %}
+
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Servidores
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <li><a class="nav-link" href="{% url 'reload' %}" >Recarregar Informações<span class="sr-only">(current)</span></a></li>
+    </ul>
+  </li>
+
+  <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+      Nginx
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+      <li><a class="dropdown-item" href="{% url 'rewrite' %}">Rewrite</a></li>
+    </ul>
+  </li>
+{% endblock %}
+
+{% block body %}
+  <div class="containerX">
+
+    <!-- Div Left -->
+    <div>
+      <!-- Programs Habilitados -->
+      {% if programs_enable %}
+        <h2>Servidores Ativo</h2>
+        <div class="d-flex flex-row flex-wrap" style="gap:20px;">
+          {% for program_h in programs_enable %}
+          <div class="card p-4" style="width: 18rem;">
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="card-title">{{ program_h.name }}</h5>
+              {% if program_h.status %}
+                <div>
+                  <span class="badge badge-success" data-toggle="tooltip" data-placement="top" title="STATUS">Online</span>
+                  <span class="badge badge-primary" data-toggle="tooltip" data-placement="top" title="PID"> {{ program_h.pid }}</span>
+                  <span class="badge badge-light" data-toggle="tooltip" data-placement="top" title="PORT">{{ program_h.port }}</span>
+                </div>
+              {% else %}
+                <span class="badge badge-danger">Offline</span>
+              {% endif %}
+            </div>
+            <p class="card-text">{{ program_h.desc }}</p>
+            {% if program_h.init %}
+              <h6 class="card-subtitle mb-2 text-muted small">Inicializado em {{ program_h.init }}</h6>
+            {% endif %}
+            <a href="{% url 'detail'  program_h.pk %}" class="card-link">Detalhes</a>
+          </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      <!-- Programs Habilitados -->
+      <br>
+      <!-- Programs desabilitados -->
+      {% if programs_disabled %}
+        <h2>Servidores Inativo</h2>
+        <div class="d-flex flex-row flex-wrap" style="gap:20px;">    <!-- Programs Habilitados -->
+          {% for program_d in programs_disabled %}
+          <div class="card p-4" style="width: 18rem;">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="card-title">{{ program_d.name }}</h5>
+            </div>
+            <p class="card-text">{{ program_d.desc }}</p>
+            <a href="{% url 'detail'  program_d.pk %}" class="card-link">Detalhes</a>
+          </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      <!-- Programs desabilitados -->
+
+       <!-- Paginas Static -->
+       {% if pages_static %}
+       <h2>Paginas Estaticas</h2>
+       <div class="d-flex flex-row flex-wrap" style="gap:20px;">    <!-- Programs Habilitados -->
+         {% for page in pages_static %}
+         <div class="card p-4" style="width: 18rem;">
+           <div class="d-flex justify-content-between align-items-center">
+               <h5 class="card-title">{{ page.name }}</h5>
+           </div>
+           <p class="card-text">{{ page.desc }}</p>
+           <a href="{% url 'page'  page.pk %}" class="card-link">Detalhes</a>
+         </div>
+         {% endfor %}
+       </div>
+     {% endif %}
+     <!-- Paginas Static -->
+    </div>
+    
+    <!-- Div Right -->
+    <div class="containerRigth">
+      <!-- Services Nginx -->
+      <h3>Serviços Nginx</h3>
+      <div class="d-flex flex-column" style="gap:10px;">    <!-- Programs Habilitados -->
+        {% for service in services %}
+          {% if service.active %}
+            <a href="{% url 'admin:nginx_service_change' service.pk %}">
+              <span class="badge bg-dark" style="color:white;" data-toggle="tooltip" data-placement="top" title="STATUS">{{service.name}}</span>
+            </a>
+          {% else %}
+            <span class="badge bg-danger" data-toggle="tooltip" data-placement="top" title="STATUS">{{service.name}}</span>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <!-- Services Nginx -->
+    </div>
+  </div>
+
+{% endblock %}

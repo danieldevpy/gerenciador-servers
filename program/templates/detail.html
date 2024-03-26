@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block title %} Servidor {{program.name}} {%endblock%}
+{% block bar_title %} {{program.name}} {% endblock %}
+
+{% block header%}
+
+    {% if installed %}
+        {% if program.status %}
+            <li class="nav-item active">
+            <a class="nav-link" style="color:red;" href="{% url 'stop' program.pk %}" >Desligar Servidor <span class="sr-only">(current)</span></a>
+            </li>
+        {% else %}
+            <li class="nav-item active">
+                <a class="nav-link" style="color:green;" href="{% url 'start' program.pk %}">Ligar Servidor<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" style="color:yellow;" href="{% url 'git' 'reset' program.pk %}">Git Reset<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" style="color:blue;" href="{% url 'git' 'pull' program.pk %}">Git Pull<span class="sr-only">(current)</span></a>
+            </li>
+        {% endif %}
+    {% endif %}
+
+    {% if not installed %}
+        <li class="nav-item active">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">INSTALAR SERVIDOR</button>
+        </li>
+    {% else %}
+        {% if not program.status %}
+            <li class="nav-item active">
+                <a class="nav-link" style="color:red;" href="{% url 'uninstall' program.pk %}">Desinstalar Servidor<span class="sr-only">(current)</span></a>
+            </li>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+
+{% block body%}
+   
+    <div class="container">
+
+      
+        <!-- Header -->
+        {% if sub_programs %}
+          <div class="d-flex align-items-center flex-column" style="gap:20px;">
+            <h3>Sub Programas</h3>
+            <div class="card" style="width: 18rem;">
+              <div class="card-header">
+                Lista Sub Programas
+              </div>
+              <ul class="list-group list-group-flush">
+                {% for sub in sub_programs %}
+                  <li class="list-group-item">
+                    {{ sub.name }}
+
+                    {% if sub.status %}
+                      <span class="badge bg-success" data-toggle="tooltip" data-placement="top" title="STATUS">Ligado</span>
+                    {% else %}
+                      <span class="badge bg-danger" data-toggle="tooltip" data-placement="top" title="STATUS">Desligado</span>
+                    {% endif %}
+
+                    {% if sub.active %}
+                      <span class="badge bg-success">Ativo</span>
+                    {% else %}
+                      <span class="badge bg-danger">Desativado</span>
+                    {% endif %}
+
+                  </li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <br>
+        {% endif %}
+
+       <div class="d-flex align-items-center flex-column" style="gap:20px;">
+        <h3>Notificações</h3>
+
+
+        <!-- Acordion -->
+        {% if notifys %}
+          <div style="max-height: 60vh; overflow: auto;">
+          {% for notify in notifys %}
+            <div id="accordion">
+              <div class="card">
+                <div class="card-header" id="headingOne">
+                  <h5 class="mb-0">
+                    <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                      {{ notify.desc }}
+                    </button>
+                  </h5>
+                </div>
+                
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                  {% if notify.error %}
+                    <div class="card-body">
+                      <p style="color: red;"> 
+                        {{ notify.error }}
+                      </p>
+                    </div>
+                  {% endif %}
+                  <div class="d-flex justify-content-around align-items-center">
+                    <h6 class="card-subtitle mb-2 text-muted small p-2 ">{{ notify.date }}</h6>
+                    <a href="{% url 'remove_notification' notify.pk %}" class="card-link">X</a>
+                  </div>
+
+                </div>
+
+              </div>
+          {% endfor %}
+          </div>
+
+        {% else %}
+              <h3 style="color: grey;"> Nenhuma atividade </h3>
+        {% endif %}
+        <!-- Acordion -->
+        
+
+      <!-- Modal -->
+      <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">remove_notification
+              <h5 class="modal-title" id="exampleModalLabel">Instalar Servidor {{program.name}} </h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{% url 'install' program.pk %}">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                      <label for="basic-url">URL do seu repositório</label>
+                      <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="basic-addon3">https://github.com/</span>
+                        </div>
+                        <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" name="repository_url">
+                      </div>
+                      <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="basic-addon1">Comandos</span>
+                        </div>
+                        <input type="text" class="form-control" placeholder="Comandos" aria-label="Comandos" aria-describedby="basic-addon1" name="commands">
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Save changes</button>
+                    </div>
+                </form>   
+            </div>
+           
+          </div>
+        </div>
+      </div>
+     
+    </div>
+    
+
+{% endblock %}

@@ -1,0 +1,26 @@
+.containerX{
+    padding: 30px;
+    display: flex;
+    justify-content: space-around;
+
+}
+
+.containerX1{
+    
+}
+.containerX2{
+    
+}
+
+.containerRigth{
+    border-left: 1px solid black;
+    padding-left: 10px;
+}
+
+@media (max-width: 800px){
+
+    .sizeheader{
+        font-size: small;
+    }
+
+}

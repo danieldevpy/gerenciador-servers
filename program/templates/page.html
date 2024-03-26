@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+
+{% block title %} Servidor {{program.name}} {%endblock%}
+{% block bar_title %} Pagina {{program.name}} {% endblock %}
+
+
+{% block header%}
+
+    {% if installed %}
+        <li class="nav-item active">
+            <a class="nav-link" style="color:yellow;" href="{% url 'git' 'reset' program.pk %}">Git Reset<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" style="color:blue;" href="{% url 'git' 'pull' program.pk %}">Git Pull<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+            <a class="nav-link" style="color:red;" href="{% url 'uninstall' program.pk %}">Desinstalar Servidor<span class="sr-only">(current)</span></a>
+        </li>
+    {% else %}
+        <li class="nav-item active">
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">INSTALAR PAGINA</button>
+        </li>
+    {% endif %}
+
+{% endblock %}
