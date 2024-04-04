@@ -53,7 +53,7 @@ def static(request, pk):
 
 
 def reload(request):
-    # ListPrograms.__reload__()
+    ListPrograms.programs = ProgramController.return_all_programs()
     messages.add_message(request, messages.SUCCESS, 'Reload')
     return redirect('/')
 
@@ -83,20 +83,24 @@ def stop(request, pk):
     return redirect(f'/detail/{pk}')
 
 def install(request, pk):
-    program = ListPrograms.get_program_by_id(pk)
+    program = Program.objects.get(pk=pk)
     if not program:
         messages.add_message(request, messages.ERROR, 'Servidor não encontrado')
         return redirect('/')
-    
     repo = request.POST.get('repository_url').lower()
     repository_url = f'https://github.com/{repo}' 
-    commands = request.POST.get('commands').lower()
+    commands = request.POST.get('commands')
     try:
         ProgramController.install_program(program, repository_url, commands)
         messages.add_message(request, messages.SUCCESS, 'Servidor Instalado!')
     except Exception as e:
         messages.add_message(request, messages.ERROR, str(e))
-    return redirect(f'/detail/{pk}')
+
+    previus_url = RequestCommands.get_previous_url(request)
+    if previus_url:
+        return redirect(previus_url)
+    
+    return redirect('/')
 
 def uninstall(request, pk):
     program = Program.objects.get(pk=pk)
@@ -116,7 +120,7 @@ def uninstall(request, pk):
     return redirect('/')
 
 def git(request, command, pk):
-    program = ListPrograms.get_program_by_id(pk)
+    program = Program.objects.get(pk=pk)
     if not program:
         messages.add_message(request, messages.ERROR, 'Servidor não encontrado')
         return redirect('/')
@@ -128,15 +132,10 @@ def git(request, command, pk):
         messages.add_message(request, messages.ERROR, str(e))
 
     previus_url = RequestCommands.get_previous_url(request)
-
     if previus_url:
         return redirect(previus_url)
     
     return redirect('/')
-
-def implement_context(context: dict):
-    context['notifications'] = Notification.objects.filter(checked=False)
-    return context
 
 def remove_notification(request, pk):
     try:
@@ -147,8 +146,10 @@ def remove_notification(request, pk):
         messages.add_message(request, messages.ERROR, str(e))
 
     previus_url = RequestCommands.get_previous_url(request)
-
     if previus_url:
         return redirect(previus_url)
-    
     return redirect('/')
+
+def implement_context(context: dict):
+    context['notifications'] = Notification.objects.filter(checked=False)
+    return context

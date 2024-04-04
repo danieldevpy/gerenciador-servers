@@ -22,6 +22,9 @@ class ProgramController:
         program.pid = process.pid
         program.init = datetime.datetime.now()
         program.save()
+        parent = psutil.Process(program.process.pid)
+        for child in parent.children(recursive=True):
+          print(child)
         sub_programs: List[SubProgram] = program.sub_programs.filter(active=True)
         if sub_programs:
           for sub in sub_programs:
@@ -98,10 +101,11 @@ class ProgramController:
 
     # Comando para clonar o repositório
     clone_command = f'git clone {repository} {destination_path}'
-    subprocess.run(clone_command, shell=True, check=True)
     
-    c = ['bash', '-c', commands]
-    ProcessCommands.start_process(path=destination_path, commands=c)
+    subprocess.run(clone_command, shell=True, check=True, env={})
+
+    if commands:
+      ProcessCommands.start_process(path=destination_path, commands=commands)
     
     return True
 

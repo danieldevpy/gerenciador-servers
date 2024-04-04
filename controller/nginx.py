@@ -44,18 +44,19 @@ http {
         return text
     
     @classmethod
-    def reescrever(cls, nginx_conf: str, password=False):
+    def reescrever(cls, nginx_conf: str, password):
+
         path = Config.objects.first().path
         nginx_path = os.path.join(path, 'nginx.conf')
 
-        commmand_remove = f"echo devpython | sudo -S rm -rf {path}/nginx.conf"
+        commmand_remove = f"echo {password} | sudo -S rm -rf {path}/nginx.conf"
         process_remove = ProcessCommands.execute_command_shell(commmand_remove)
         saida, erro = process_remove.communicate(timeout=15)
 
         arquivo_temporario = tempfile.NamedTemporaryFile(mode='w', delete=False)
         arquivo_temporario.write(nginx_conf)
 
-        command_move = f"echo devpython | sudo -S mv {arquivo_temporario.name} {nginx_path}"
+        command_move = f"echo {password} | sudo -S mv {arquivo_temporario.name} {nginx_path}"
         process_move = ProcessCommands.execute_command_shell(command_move)
         saida, erro = process_move.communicate(timeout=15)
 
@@ -66,7 +67,7 @@ http {
         else:
             comando = f"sudo -S systemctl {command} nginx"
         process = ProcessCommands.execute_command_shell(comando)
-        saida, erro = process.communicate(timeout=15)  # Aguarda a finalização do processo
+        saida, erro = process.communicate(timeout=3)  # Aguarda a finalização do processo
 
         if process.returncode == 0:
             return saida, erro

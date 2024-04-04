@@ -18,7 +18,7 @@
       Nginx
     </a>
     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-      <li><a class="dropdown-item" href="{% url 'rewrite' %}">Rewrite</a></li>
+      <li><a class="dropdown-item" href="{% url 'code' %}">Code</a></li>
     </ul>
   </li>
 {% endblock %}
@@ -50,7 +50,10 @@
             {% if program_h.init %}
               <h6 class="card-subtitle mb-2 text-muted small">Inicializado em {{ program_h.init }}</h6>
             {% endif %}
-            <a href="{% url 'detail'  program_h.pk %}" class="card-link">Detalhes</a>
+            <div>
+              <a href="{% url 'detail'  program_h.pk %}" class="card-link">Detalhes</a>
+              <a href="{% url 'admin:program_program_change'  program_h.pk %}" class="card-link" target="_blank">Config</a>
+            </div>
           </div>
           {% endfor %}
         </div>
@@ -67,7 +70,10 @@
                 <h5 class="card-title">{{ program_d.name }}</h5>
             </div>
             <p class="card-text">{{ program_d.desc }}</p>
-            <a href="{% url 'detail'  program_d.pk %}" class="card-link">Detalhes</a>
+            <div>
+                <a href="{% url 'detail'  program_d.pk %}" class="card-link">Detalhes</a>
+                <a href="{% url 'admin:program_program_change'  program_d.pk %}" class="card-link" target="_blank">Config</a>
+            </div>
           </div>
           {% endfor %}
         </div>
