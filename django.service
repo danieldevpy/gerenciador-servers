@@ -1,0 +1,18 @@
+GNU nano 6.2                                                                               django.service                                                                                         
+[Unit]
+Description=Servidor Django
+After=network.target
+
+[Service]
+User=cisbaf
+Group=cisbaf
+Environment="PATH=/snap/bin:/usr/bin:/usr/local/bin:/home/cisbaf/gerenciador-servers/.venv/bin"
+WorkingDirectory=/home/cisbaf/gerenciador-servers
+ExecStart=/home/cisbaf/gerenciador-servers/.venv/bin/python /home/cisbaf/gerenciador-servers/manage.py runserver --noreload 0.0.0.0:8000
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
+
+
