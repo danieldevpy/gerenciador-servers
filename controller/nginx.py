@@ -1,4 +1,4 @@
-from nginx.models import Service, Config
+from nginx.models import Config
 from typing import List
 import os, tempfile
 from controller.process import ProcessCommands
@@ -25,23 +25,23 @@ http {
 }
         """
 
-    @classmethod
-    def generate_text(cls, services: List[Service]) -> str:
-        include = ''
-        for service in services:
-            if service.active:
-                include += f"""
-                #{service.name}
-                {service.block}
-                """
-        text = cls._base.replace("{{config}}", include)
-        user = Config.objects.first().user
-        if user:
-            text = text.replace("{{user}}", f'user {user};')
-        else:
-            text = text.replace("{{user}}", "")
+    # @classmethod
+    # def generate_text(cls, services: List[Service]) -> str:
+    #     include = ''
+    #     for service in services:
+    #         if service.active:
+    #             include += f"""
+    #             #{service.name}
+    #             {service.block}
+    #             """
+    #     text = cls._base.replace("{{config}}", include)
+    #     user = Config.objects.first().user
+    #     if user:
+    #         text = text.replace("{{user}}", f'user {user};')
+    #     else:
+    #         text = text.replace("{{user}}", "")
 
-        return text
+    #     return text
     
     @classmethod
     def reescrever(cls, nginx_conf: str, password):
@@ -66,6 +66,7 @@ http {
             comando = f"echo {password} | sudo -S systemctl {command} nginx"
         else:
             comando = f"sudo -S systemctl {command} nginx"
+        print(comando)
         process = ProcessCommands.execute_command_shell(comando)
         saida, erro = process.communicate(timeout=3)  # Aguarda a finalização do processo
 

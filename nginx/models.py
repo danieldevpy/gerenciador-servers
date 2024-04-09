@@ -10,10 +10,3 @@ class Config(models.Model):
     def __str__(self) -> str:
         return self.path
 
-class Service(models.Model):
-    name = models.CharField(max_length=200)
-    block = models.TextField()
-    active = models.BooleanField(default=False, null=True)
-
-    def __str__(self) -> str:
-        return self.name

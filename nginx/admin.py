@@ -1,5 +1,5 @@
 from django.contrib import admin
-from . models import Config, Service
+from . models import Config
 # Register your models here.
 
 
@@ -7,8 +7,4 @@ class AdminConfig(admin.ModelAdmin):
     pass
 
 
-class AdminService(admin.ModelAdmin):
-    pass
-
 admin.site.register(Config, AdminConfig)
-admin.site.register(Service, AdminService)

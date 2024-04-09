@@ -5,19 +5,17 @@ from controller.git import GitCommands
 from controller.request import RequestCommands
 from program.models import Notification, Program
 from django.contrib import messages
-from nginx.models import Service
+
 
 def index(request):
     programs = ListPrograms.get_all()
     programs_enable = [program for program in programs if program.active]
     programs_disabled = [program for program in programs if not program.active]
     pages_static = Program.objects.filter(server=False)
-    services = Service.objects.all()
 
     context = {
         'programs_enable': programs_enable,
         'programs_disabled': programs_disabled,
-        'services': services,
         'pages_static': pages_static
     }
     return render(request, 'index.html', implement_context(context))

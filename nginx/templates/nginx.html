@@ -4,35 +4,18 @@
 {% block bar_title %} Nginx CODE {% endblock %}
 
 
-{% block header %}
- <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Nginx
-    </a>
-    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-      <li><a class="dropdown-item" href="{% url 'rewrite' %}">Rewrite</a></li>
-    </ul>
-  </li>
-{% endblock %}
 
 {% block body %}
+
     <div class="containerX">
-        <pre style="">{{command}}</pre>
+      <form method="post" action="{% url 'rewrite' %}">
+      {% csrf_token %}  
+        <textarea id="editor" name="nginx" rows="{{lines}}" cols="100">
+          {{commands}}
+        </textarea>
+         <button type="submit" class="btn btn-primary">Save changes</button>
+      </form>
     </div>
     
-
-    {% comment %} <script>
-        window.addEventListener("load", function (event) {
-            const divBody = document.getElementsByClassName("containerX")[0];
-            const pre = document.getElementsByTagName("pre")[0];
-            const subTexts = pre.innerHTML.split("\n");
-
-            subTexts.forEach(text=>{
-                if(text){
-                    console.log(text);
-                }
-            })
-
-        }); {% endcomment %}
     </script>
 {% endblock %}
