@@ -4,13 +4,6 @@ from django.db import models
 from django.utils import timezone
 
 
-class Config(models.Model):
-    path = models.CharField(max_length=500)
-
-    def __str__(self) -> str:
-        return self.path
-
-
 class Program(models.Model):
     name = models.CharField(max_length=200)
     folder = models.CharField(max_length=200, null=True, blank=True)

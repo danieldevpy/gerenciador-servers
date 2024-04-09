@@ -1,13 +1,14 @@
 import time, os, datetime, psutil, subprocess, shutil
 from typing import List
-from program.models import Program, Config, Notification, SubProgram
+from program.models import Program, Notification, SubProgram
 from controller.process import ProcessCommands
+from settings.models import Config
 
 class ProgramController:
 
   @classmethod
   def return_all_programs(cls):
-    return Program.objects.filter(server=True)
+    return Program.objects.all()
 
   @classmethod
   def start(cls, program: Program) -> str:
@@ -15,16 +16,17 @@ class ProgramController:
         raise Exception("Para inicializar o programa deverá estar habilitado")
       # register error  
       try:
-        path = Config.objects.first().path + program.folder
-        process, response = ProcessCommands.start_process(path, program.commands, program.env)
+        path = os.path.join(Config.objects.first().path_programs, program.folder)
+        if program.server:
+          process, response = ProcessCommands.start_process(path, program.commands, program.env)
+        else:
+          commands = f'python -m http.server {program.port}'
+          process, response = ProcessCommands.start_process(path, commands, program.env)
         program.status = True
         program.process = process
         program.pid = process.pid
         program.init = datetime.datetime.now()
         program.save()
-        parent = psutil.Process(program.process.pid)
-        for child in parent.children(recursive=True):
-          print(child)
         sub_programs: List[SubProgram] = program.sub_programs.filter(active=True)
         if sub_programs:
           for sub in sub_programs:
@@ -96,7 +98,7 @@ class ProgramController:
   @classmethod
   def install_program(cls, program: Program, repository: str, commands: str):
     # Caminho onde o programa será instalado
-    base_path = Config.objects.first().path
+    base_path = Config.objects.first().path_programs
     destination_path = os.path.join(base_path, program.folder)
 
     # Comando para clonar o repositório
@@ -112,12 +114,12 @@ class ProgramController:
     
   @classmethod
   def exist_folder(cls, program: Program) -> bool:
-    base_path = Config.objects.first().path
+    base_path = Config.objects.first().path_programs
     path = os.path.join(base_path, program.folder)
     return os.path.exists(path)
   
   @classmethod
   def remove_folder(cls, program: Program):
-      base_path = Config.objects.first().path
+      base_path = Config.objects.first().path_programs
       path = os.path.join(base_path, program.folder)
       shutil.rmtree(path)

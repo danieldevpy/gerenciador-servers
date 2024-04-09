@@ -11,12 +11,10 @@ def index(request):
     programs = ListPrograms.get_all()
     programs_enable = [program for program in programs if program.active]
     programs_disabled = [program for program in programs if not program.active]
-    pages_static = Program.objects.filter(server=False)
 
     context = {
         'programs_enable': programs_enable,
         'programs_disabled': programs_disabled,
-        'pages_static': pages_static
     }
     return render(request, 'index.html', implement_context(context))
 
@@ -38,21 +36,14 @@ def detail(request, pk):
     }
     return render(request, 'detail.html', implement_context(context))
 
-def static(request, pk):
-    program = Program.objects.get(pk=pk)
-    installed = ProgramController.exist_folder(program)
-
-    context = {
-        'program': program,
-        'installed': installed
-        }
-
-    return render(request, 'page.html', implement_context(context))
-
-
 def reload(request):
     ListPrograms.programs = ProgramController.return_all_programs()
     messages.add_message(request, messages.SUCCESS, 'Reload')
+    return redirect('/')
+
+def stop_all(request):
+    ListPrograms.__stop_all__()
+    messages.add_message(request, messages.SUCCESS, 'Stopped')
     return redirect('/')
 
 def start(request, pk):

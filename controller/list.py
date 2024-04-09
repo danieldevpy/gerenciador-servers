@@ -5,6 +5,7 @@ class ListPrograms:
 
   programs = None
   controller = None
+  pages = None
 
   @classmethod
   def __start_all__(cls):
@@ -27,7 +28,10 @@ class ListPrograms:
     print('Desligando todos os servidores!')
 
     for program in ListPrograms.programs:
+      try:
         ListPrograms.controller.stop(program)
+      except:
+        pass
 
   @classmethod
   def get_program_by_id(cls, program_id: int):

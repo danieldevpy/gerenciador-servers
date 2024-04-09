@@ -4,8 +4,8 @@ from program import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('reload', views.reload, name='reload'),
+    path('stopall', views.stop_all, name="stop_all"),
     path('detail/<int:pk>', views.detail, name='detail'),
-    path('page/<int:pk>', views.static, name='page'),
     path('start/<int:pk>', views.start, name='start'),
     path('stop/<int:pk>', views.stop, name='stop'),
     path('install/<int:pk>', views.install, name='install'),

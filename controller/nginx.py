@@ -1,52 +1,17 @@
-from nginx.models import Config
+
 from typing import List
 import os, tempfile
 from controller.process import ProcessCommands
-
+from settings.models import Config
 
 
 class NginxCommands:
     
-    _base = """{{user}}
-worker_processes  1;
-
-events {
-    worker_connections  1024;
-}
-
-http {	
-    include       mime.types;
-    default_type  application/octet-stream;
-    sendfile        on;
-    keepalive_timeout  65;
-
-    {{config}}
-    
-}
-        """
-
-    # @classmethod
-    # def generate_text(cls, services: List[Service]) -> str:
-    #     include = ''
-    #     for service in services:
-    #         if service.active:
-    #             include += f"""
-    #             #{service.name}
-    #             {service.block}
-    #             """
-    #     text = cls._base.replace("{{config}}", include)
-    #     user = Config.objects.first().user
-    #     if user:
-    #         text = text.replace("{{user}}", f'user {user};')
-    #     else:
-    #         text = text.replace("{{user}}", "")
-
-    #     return text
-    
     @classmethod
     def reescrever(cls, nginx_conf: str, password):
+        config = Config.objects.first()
 
-        path = Config.objects.first().path
+        path = config.path_nginx
         nginx_path = os.path.join(path, 'nginx.conf')
 
         commmand_remove = f"echo {password} | sudo -S rm -rf {path}/nginx.conf"
@@ -66,7 +31,7 @@ http {
             comando = f"echo {password} | sudo -S systemctl {command} nginx"
         else:
             comando = f"sudo -S systemctl {command} nginx"
-        print(comando)
+
         process = ProcessCommands.execute_command_shell(comando)
         saida, erro = process.communicate(timeout=3)  # Aguarda a finalização do processo
 

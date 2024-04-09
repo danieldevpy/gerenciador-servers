@@ -10,6 +10,7 @@
     </a>
     <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
       <li><a class="nav-link" href="{% url 'reload' %}" >Recarregar Informações<span class="sr-only">(current)</span></a></li>
+      <li><a class="nav-link" href="{% url 'stop_all' %}" >Desligando Servidores<span class="sr-only">(current)</span></a></li>
     </ul>
   </li>
 
@@ -80,38 +81,14 @@
       {% endif %}
       <!-- Programs desabilitados -->
 
-       <!-- Paginas Static -->
-       {% if pages_static %}
-       <h2>Paginas Estaticas</h2>
-       <div class="d-flex flex-row flex-wrap" style="gap:20px;">    <!-- Programs Habilitados -->
-         {% for page in pages_static %}
-         <div class="card p-4" style="width: 18rem;">
-           <div class="d-flex justify-content-between align-items-center">
-               <h5 class="card-title">{{ page.name }}</h5>
-           </div>
-           <p class="card-text">{{ page.desc }}</p>
-           <a href="{% url 'page'  page.pk %}" class="card-link">Detalhes</a>
-         </div>
-         {% endfor %}
-       </div>
-     {% endif %}
-     <!-- Paginas Static -->
     </div>
     
     <!-- Div Right -->
     <div class="containerRigth">
       <!-- Services Nginx -->
-      <h3>Serviços Nginx</h3>
+      <h3>DESATIVADO</h3>
       <div class="d-flex flex-column" style="gap:10px;">    <!-- Programs Habilitados -->
-        {% for service in services %}
-          {% if service.active %}
-            <a href="{% url 'admin:nginx_service_change' service.pk %}">
-              <span class="badge bg-dark" style="color:white;" data-toggle="tooltip" data-placement="top" title="STATUS">{{service.name}}</span>
-            </a>
-          {% else %}
-            <span class="badge bg-danger" data-toggle="tooltip" data-placement="top" title="STATUS">{{service.name}}</span>
-          {% endif %}
-        {% endfor %}
+        
       </div>
       <!-- Services Nginx -->
     </div>
