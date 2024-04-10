@@ -41,7 +41,7 @@
                 <div>
                   <span class="badge badge-success" data-toggle="tooltip" data-placement="top" title="STATUS">Online</span>
                   <span class="badge badge-primary" data-toggle="tooltip" data-placement="top" title="PID"> {{ program_h.pid }}</span>
-                  <span class="badge badge-light" data-toggle="tooltip" data-placement="top" title="PORT">{{ program_h.port }}</span>
+                  <a href="http://{{ip}}:{{program_h.port}}" target="_blank" class="badge badge-light" data-toggle="tooltip" data-placement="top" title="PORT">{{ program_h.port }}</a>
                 </div>
               {% else %}
                 <span class="badge badge-danger">Offline</span>

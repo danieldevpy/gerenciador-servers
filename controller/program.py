@@ -1,4 +1,4 @@
-import time, os, datetime, psutil, subprocess, shutil
+import time, os, datetime, psutil, subprocess, shutil, socket
 from typing import List
 from program.models import Program, Notification, SubProgram
 from controller.process import ProcessCommands
@@ -69,6 +69,7 @@ class ProgramController:
           except:
             pass
         parent.terminate()
+
       except:
         pass
       program.status = False
@@ -94,6 +95,22 @@ class ProgramController:
           sub.pid = None
           sub.init = None
           sub.save()
+
+  @classmethod
+  def find_and_kill_process(cls, port):
+      with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+          try:
+              s.bind(('localhost', port))
+          except Exception as e:
+              for proc in psutil.process_iter(['pid', 'name']):
+                  try:
+                      connections = proc.connections()
+                      for conn in connections:
+                          if conn.laddr.port == port:
+                              proc.kill()
+                              return
+                  except psutil.AccessDenied:
+                      pass
 
   @classmethod
   def install_program(cls, program: Program, repository: str, commands: str):

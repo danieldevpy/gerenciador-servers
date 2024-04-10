@@ -5,9 +5,11 @@ from controller.git import GitCommands
 from controller.request import RequestCommands
 from program.models import Notification, Program
 from django.contrib import messages
+from settings.models import Config
 
 
 def index(request):
+    config = Config.objects.first()
     programs = ListPrograms.get_all()
     programs_enable = [program for program in programs if program.active]
     programs_disabled = [program for program in programs if not program.active]
@@ -15,6 +17,7 @@ def index(request):
     context = {
         'programs_enable': programs_enable,
         'programs_disabled': programs_disabled,
+        'ip': config.ip_server
     }
     return render(request, 'index.html', implement_context(context))
 

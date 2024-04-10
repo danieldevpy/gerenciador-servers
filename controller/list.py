@@ -15,10 +15,26 @@ class ListPrograms:
     print('Ligando todos os servidores!')
 
     for program in ListPrograms.programs:
+      if program.status:
+        ListPrograms.controller.stop(program)
+        time.sleep(1)
+
       if program.sleep: time.sleep(program.sleep)
       try:
         ListPrograms.controller.start(program)
       except: pass
+
+  @classmethod
+  def __close_all__(cls):
+    if not ListPrograms.programs or not ListPrograms.controller:
+      return False
+    
+    for program in ListPrograms.programs:
+      try:
+        ListPrograms.controller.find_and_kill_process(program.port)
+      except:
+        pass
+
 
   @classmethod
   def __stop_all__(cls):
