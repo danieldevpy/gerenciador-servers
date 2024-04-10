@@ -1,20 +1,20 @@
 from program.models import Program
 from controller.process import ProcessCommands
 from settings.models import Config
-import subprocess
+import os
 
 class GitCommands:
 
     @classmethod
     def pull(cls, program: Program, force=False):
-        path = Config.objects.first().path_programs + program.folder
+        path = os.path.join(Config.objects.first().path_programs, program.folder)
         command = f'git pull --force'
         _, response = ProcessCommands.start_process(path, command)
         return response.decode('utf-8')
     
     @classmethod
     def reset(cls, program: Program, hash):
-        path = Config.objects.first().path_programs + program.folder
+        path = os.path.join(Config.objects.first().path_programs, program.folder)
         command = f'git reset --hard {hash}'
         _, response = ProcessCommands.start_process(path, command)
         return response.decode('utf-8')
