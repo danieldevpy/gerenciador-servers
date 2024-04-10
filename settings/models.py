@@ -6,6 +6,7 @@ from django.db import models
 class Config(models.Model):
     name = models.CharField(max_length=200)
     ubuntu_pass = models.CharField(max_length=200)
+    ip_server = models.CharField(max_length=200, blank=True, null=True)
     path_nginx = models.CharField(max_length=500)
     path_programs = models.CharField(max_length=500)
     

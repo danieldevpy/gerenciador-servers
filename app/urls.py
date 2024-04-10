@@ -5,7 +5,7 @@ from controller.program import ProgramController
 
 ListPrograms.controller = ProgramController
 ListPrograms.programs = ProgramController.return_all_programs()
-ListPrograms.__start_all__()
+# ListPrograms.__start_all__()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
