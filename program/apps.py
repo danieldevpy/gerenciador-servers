@@ -1,12 +1,11 @@
+from django.apps import AppConfig
+from .services import CheckProgramIsRunning
+import signal
 
 
-config = True
+config = False
 
 if not config:
-    from django.apps import AppConfig
-    from .services import CheckProgramIsRunning
-    from controller.list import ListPrograms
-    import signal
 
     check = CheckProgramIsRunning()
 
@@ -17,9 +16,7 @@ if not config:
 
         def shutdown_handler(self, signum, frame):
             check.stop()
-            ListPrograms.__stop_all__()
             exit(0)
-
 
         def ready(self) -> None:
             signal.signal(signal.SIGINT, self.shutdown_handler)

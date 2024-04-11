@@ -11,10 +11,11 @@ class Program(models.Model):
     commands = models.CharField(max_length=500)
     desc = models.CharField(max_length=200, null=True, blank=True)
     sleep = models.IntegerField(default=1, null=True)
-    server = models.BooleanField(default=True, null=True)
+    password = models.BooleanField(default=False, null=True)
     status = models.BooleanField(default=False, null=True)
     active = models.BooleanField(default=False, null=True)
-    env = models.BooleanField(default=False, null=True)
+    type = models.CharField(max_length=100, choices=(("server", "Servidor"), ("service", "Serviço"), ('page', 'Pagina Estatica')))
+
     process: Optional[subprocess.Popen] = None
     pid: int = None
     init: datetime.datetime = None

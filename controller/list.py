@@ -1,5 +1,5 @@
+from controller.processnew import ProcessController
 import time
-
 
 class ListPrograms:
 
@@ -15,26 +15,22 @@ class ListPrograms:
     print('Ligando todos os servidores!')
 
     for program in ListPrograms.programs:
-      if program.status:
-        ListPrograms.controller.stop(program)
-        time.sleep(1)
+      if program.active:
+        if program.status:
+          ListPrograms.controller.stop(program)
 
-      if program.sleep: time.sleep(program.sleep)
-      try:
-        ListPrograms.controller.start(program)
-      except: pass
+        process = ProcessController.search_by_port(program.port)
+        if process:
+          print('kill em', process.pid)
+          process.kill()
 
-  @classmethod
-  def __close_all__(cls):
-    if not ListPrograms.programs or not ListPrograms.controller:
-      return False
-    
-    for program in ListPrograms.programs:
-      try:
-        ListPrograms.controller.find_and_kill_process(program.port)
-      except:
-        pass
+        if program.sleep:
+          time.sleep(program.sleep)
 
+        try:
+          ListPrograms.controller.start(program)
+        except Exception as e:
+          ListPrograms.controller.notification(program, "Erro ao iniciar automaticamente")
 
   @classmethod
   def __stop_all__(cls):
@@ -68,13 +64,14 @@ class ListPrograms:
   def check_all(cls):
     if not ListPrograms.programs or not ListPrograms.controller:
       return False
-    
-    p = []
 
     for program in ListPrograms.programs:
-      if program.status:
-        response = ListPrograms.controller.is_running(program)
-        if response:
-          p.append(program)
-
-    return p
+      if program.status and program.process:
+        if program.type == "server":
+          if not program.process.is_running():
+            ListPrograms.controller.crash(program)
+            ListPrograms.controller.start(program)
+        else:
+          if program.process.poll():
+            ListPrograms.controller.crash(program)
+            ListPrograms.controller.start(program)

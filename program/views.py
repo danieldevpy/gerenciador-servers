@@ -40,7 +40,18 @@ def detail(request, pk):
     return render(request, 'detail.html', implement_context(context))
 
 def reload(request):
-    ListPrograms.programs = ProgramController.return_all_programs()
+    update_list = []
+    for p in ListPrograms.programs:
+        program = Program.objects.get(pk=p.pk)
+        program.pid = p.pid
+        program.process = p.process
+        program.list_programs = p.list_programs
+        program.init = p.init
+        print(p.pid)
+        update_list.append(program)
+    
+    ListPrograms.programs = update_list
+
     messages.add_message(request, messages.SUCCESS, 'Reload')
     return redirect('/')
 

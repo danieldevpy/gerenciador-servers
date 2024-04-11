@@ -9,13 +9,9 @@ class CheckProgramIsRunning(threading.Thread):
 
   def run(self):
     while not self.stop_event.is_set():
-      time.sleep(10)
-      programs = ListPrograms.check_all()
-      if programs:
-        for program in programs:
-          try:
-            ListPrograms.controller.crash(program)
-          except: pass
+      time.sleep(5)
+      print('check')
+      ListPrograms.check_all()
             
   def stop(self):
       self.stop_event.set()

@@ -9,12 +9,12 @@ class GitCommands:
     def pull(cls, program: Program, force=False):
         path = os.path.join(Config.objects.first().path_programs, program.folder)
         command = f'git pull --force'
-        _, response = ProcessCommands.start_process(path, command)
+        _, response = ProcessCommands.start_process(path, command, False)
         return response.decode('utf-8')
     
     @classmethod
     def reset(cls, program: Program, hash):
-        path = os.path.join(Config.objects.first().path_programs, program.folder)
+        path = os.path.join(Config.objects.first().path_programs, program.folder, False)
         command = f'git reset --hard {hash}'
         _, response = ProcessCommands.start_process(path, command)
         return response.decode('utf-8')
