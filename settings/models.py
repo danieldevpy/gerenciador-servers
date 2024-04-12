@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 
+
 class Config(models.Model):
     name = models.CharField(max_length=200)
     ubuntu_pass = models.CharField(max_length=200)
@@ -15,3 +16,6 @@ class Config(models.Model):
 class NginxBackup(models.Model):
     date = models.DateTimeField(default=datetime.now(), blank=True, null=True)
     content = models.TextField()
+
+    def __str__(self) -> str:
+        return str(self.date)

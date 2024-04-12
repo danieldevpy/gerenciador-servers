@@ -6,9 +6,12 @@ from controller.request import RequestCommands
 from program.models import Notification, Program
 from django.contrib import messages
 from settings.models import Config
+from django.http import HttpResponseForbidden
 
 
 def index(request):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return HttpResponseForbidden("Você não tem permissão para acessar esta página.")
     config = Config.objects.first()
     programs = ListPrograms.get_all()
     programs_enable = [program for program in programs if program.active]
@@ -22,6 +25,9 @@ def index(request):
     return render(request, 'index.html', implement_context(context))
 
 def detail(request, pk):
+    if not request.user.is_authenticated or not request.user.is_staff:
+        return HttpResponseForbidden("Você não tem permissão para acessar esta página.")
+    
     program = ListPrograms.get_program_by_id(pk)
     if not program:
         messages.add_message(request, messages.ERROR, 'Servidor não encontrado')

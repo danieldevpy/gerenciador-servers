@@ -3,7 +3,7 @@ from .services import CheckProgramIsRunning
 import signal
 
 
-config = False
+config = True
 
 if not config:
 
