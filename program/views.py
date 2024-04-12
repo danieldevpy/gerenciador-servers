@@ -47,7 +47,6 @@ def reload(request):
         program.process = p.process
         program.list_programs = p.list_programs
         program.init = p.init
-        print(p.pid)
         update_list.append(program)
     
     ListPrograms.programs = update_list
@@ -129,7 +128,6 @@ def git(request, command, pk):
         return redirect('/')
     try:
         response = GitCommands.execute_view(command, program)
-        print(response)
         messages.add_message(request, messages.SUCCESS, response)
     except Exception as e:
         messages.add_message(request, messages.ERROR, str(e))

@@ -10,7 +10,6 @@ class CheckProgramIsRunning(threading.Thread):
   def run(self):
     while not self.stop_event.is_set():
       time.sleep(5)
-      print('check')
       ListPrograms.check_all()
             
   def stop(self):

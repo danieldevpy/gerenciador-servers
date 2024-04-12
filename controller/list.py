@@ -21,7 +21,6 @@ class ListPrograms:
 
         process = ProcessController.search_by_port(program.port)
         if process:
-          print('kill em', process.pid)
           process.kill()
 
         if program.sleep:
@@ -66,11 +65,17 @@ class ListPrograms:
       return False
 
     for program in ListPrograms.programs:
+
       if program.status and program.process:
+
         if program.type == "server":
           if not program.process.is_running():
             ListPrograms.controller.crash(program)
             ListPrograms.controller.start(program)
+          else:
+            if program.process.status() == "zombie":
+              ListPrograms.controller.crash(program)
+              ListPrograms.controller.start(program)
         else:
           if program.process.poll():
             ListPrograms.controller.crash(program)

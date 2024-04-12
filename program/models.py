@@ -33,6 +33,7 @@ class SubProgram(models.Model):
     active = models.BooleanField(default=False, null=True)
     env = models.BooleanField(default=False, null=True)
     commands = models.CharField(max_length=500)
+    
     process: Optional[subprocess.Popen] = None
     pid: int = None
     init: datetime.datetime = None

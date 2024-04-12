@@ -11,7 +11,6 @@ class ProcessController:
             command = f'echo {password} | ' + command
         cmd = ['bash', '-c', command]
 
-        print(cmd)
         process = subprocess.Popen(cmd, cwd=path, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env={
         'PATH':  os.environ['PATH']
           })
@@ -23,7 +22,7 @@ class ProcessController:
                 return Process
             else:
                 stdout, stderr = process.communicate(timeout=5)
-                print(stdout, stderr)
+       
                 if stderr:
                     raise Exception(stderr.decode())
                 elif stdout:

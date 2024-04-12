@@ -1,7 +1,5 @@
 from django.db import models
-
-# Create your models here.
-
+from datetime import datetime
 
 class Config(models.Model):
     name = models.CharField(max_length=200)
@@ -12,3 +10,8 @@ class Config(models.Model):
     
     def __str__(self) -> str:
         return self.name
+    
+
+class NginxBackup(models.Model):
+    date = models.DateTimeField(default=datetime.now(), blank=True, null=True)
+    content = models.TextField()

@@ -5,7 +5,7 @@ from controller.program import ProgramController
 from threading import Thread
 ListPrograms.controller = ProgramController
 ListPrograms.programs = ProgramController.return_all_programs()
-Thread(target=ListPrograms.__start_all__).start()
+# Thread(target=ListPrograms.__start_all__).start()
 
 
 
