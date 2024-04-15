@@ -47,13 +47,20 @@ def detail(request, pk):
 
 def reload(request):
     update_list = []
+    programs_by_id = {}
+
     for p in ListPrograms.programs:
-        program = Program.objects.get(pk=p.pk)
-        program.pid = p.pid
-        program.process = p.process
-        program.list_programs = p.list_programs
-        program.init = p.init
+        programs_by_id[p.pk] = p
+
+    for program in ProgramController.return_all_programs():
+        if program.pk in programs_by_id:
+            p = programs_by_id[program.pk]
+            program.pid = p.pid
+            program.process = p.process
+            program.list_programs = p.list_programs
+            program.init = p.init
         update_list.append(program)
+
     
     ListPrograms.programs = update_list
 

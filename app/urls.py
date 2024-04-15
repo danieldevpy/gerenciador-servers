@@ -7,8 +7,6 @@ ListPrograms.controller = ProgramController
 ListPrograms.programs = ProgramController.return_all_programs()
 Thread(target=ListPrograms.__start_all__).start()
 
-
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('program.urls')),
